@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  teampass:
+    image: teampass/teampass:latest
+    container_name: teampass
+    restart: always
+    ports:
+      - "8080:80"
+    networks:
+      - teampass-network
+    environment:
+      - MYSQL_ROOT_PASSWORD=root_password@1
+      - MYSQL_DATABASE=teampass
+      - MYSQL_USER=teampass_user
+      - MYSQL_PASSWORD=teampass_password@1
+    volumes:
+      - teampass_data:/var/www/html
+
+  db:
+    image: mysql:5.7
+    container_name: teampass_db
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=root_password@1
+      - MYSQL_DATABASE=teampass
+      - MYSQL_USER=teampass_user
+      - MYSQL_PASSWORD=teampass_password@1
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - teampass-network
+
+networks:
+  teampass-network:
+    driver: bridge
+
+volumes:
+  teampass_data:
+    driver: local
+  db_data:
+    driver: local
